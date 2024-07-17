@@ -46,7 +46,7 @@ defmodule GildedRose do
         true -> 1
       end
 
-    %{item | quality: item.quality + quality_bump, sell_in: item.sell_in - 1}
+    %{item | quality: min(item.quality + quality_bump, 50), sell_in: item.sell_in - 1}
   end
 
   def update_quality(%Item{name: "Sulfuras, Hand of Ragnaros"} = item) do

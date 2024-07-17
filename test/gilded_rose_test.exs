@@ -74,12 +74,24 @@ defmodule GildedRoseTest do
     {:ok, sulfuras} =
       Agent.start_link(fn ->
         [
+          Item.new("Sulfuras, Hand of Ragnaros", 1, 80)
+        ]
+      end)
+
+    assert :ok == GildedRose.update_quality(sulfuras)
+    assert [%Item{sell_in: 1, quality: 80}] = Agent.get(sulfuras, & &1)
+  end
+
+  test "sulfras quality is always reset to 80" do
+    {:ok, sulfuras} =
+      Agent.start_link(fn ->
+        [
           Item.new("Sulfuras, Hand of Ragnaros", 1, 1)
         ]
       end)
 
     assert :ok == GildedRose.update_quality(sulfuras)
-    assert [%Item{sell_in: 1, quality: 1}] = Agent.get(sulfuras, & &1)
+    assert [%Item{sell_in: 1, quality: 80}] = Agent.get(sulfuras, & &1)
   end
 
   test "backstage passes increase in quality as sell_in decreases" do
@@ -92,6 +104,18 @@ defmodule GildedRoseTest do
 
     assert :ok == GildedRose.update_quality(backstage_pass)
     assert [%Item{sell_in: 10, quality: 1}] = Agent.get(backstage_pass, & &1)
+  end
+
+  test "backstage passes cannot increase above 50 quality" do
+    {:ok, backstage_pass} =
+      Agent.start_link(fn ->
+        [
+          Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 50)
+        ]
+      end)
+
+    assert :ok == GildedRose.update_quality(backstage_pass)
+    assert [%Item{sell_in: 10, quality: 50}] = Agent.get(backstage_pass, & &1)
   end
 
   test "backstage passes increase in quality by 2 when sell_in is <= 10" do
