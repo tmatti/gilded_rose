@@ -153,4 +153,16 @@ defmodule GildedRoseTest do
     assert :ok == GildedRose.update_quality(backstage_pass)
     assert [%Item{sell_in: -1, quality: 0}] = Agent.get(backstage_pass, & &1)
   end
+
+  test "conjured items decrease in value twice as fast" do
+    {:ok, conjured} =
+      Agent.start_link(fn ->
+        [
+          Item.new("Conjured", 10, 10)
+        ]
+      end)
+
+    assert :ok == GildedRose.update_quality(conjured)
+    assert [%Item{sell_in: 9, quality: 8}] = Agent.get(conjured, & &1)
+  end
 end

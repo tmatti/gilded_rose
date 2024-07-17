@@ -53,6 +53,11 @@ defmodule GildedRose do
     %{item | quality: 80}
   end
 
+  def update_quality(%Item{name: "Conjured"} = item) do
+    quality_drop = if item.sell_in < 0, do: 4, else: 2
+    %{item | quality: max(0, item.quality - quality_drop), sell_in: item.sell_in - 1}
+  end
+
   def update_quality(item) do
     quality_drop = if item.sell_in < 0, do: 2, else: 1
     %{item | quality: max(0, item.quality - quality_drop), sell_in: item.sell_in - 1}
