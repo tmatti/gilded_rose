@@ -37,6 +37,18 @@ defmodule GildedRose do
     %{item | quality: min(item.quality + 1, 50), sell_in: item.sell_in - 1}
   end
 
+  def update_quality(%Item{name: "Backstage passes to a TAFKAL80ETC concert"} = item) do
+    quality_bump =
+      cond do
+        item.sell_in <= 0 -> item.quality * -1
+        item.sell_in <= 5 -> 3
+        item.sell_in <= 10 -> 2
+        true -> 1
+      end
+
+    %{item | quality: item.quality + quality_bump, sell_in: item.sell_in - 1}
+  end
+
   def update_quality(item) do
     item =
       cond do
@@ -52,48 +64,7 @@ defmodule GildedRose do
           end
 
         true ->
-          cond do
-            item.quality < 50 ->
-              item = %{item | quality: item.quality + 1}
-
-              cond do
-                item.name == "Backstage passes to a TAFKAL80ETC concert" ->
-                  item =
-                    cond do
-                      item.sell_in < 11 ->
-                        cond do
-                          item.quality < 50 ->
-                            %{item | quality: item.quality + 1}
-
-                          true ->
-                            item
-                        end
-
-                      true ->
-                        item
-                    end
-
-                  cond do
-                    item.sell_in < 6 ->
-                      cond do
-                        item.quality < 50 ->
-                          %{item | quality: item.quality + 1}
-
-                        true ->
-                          item
-                      end
-
-                    true ->
-                      item
-                  end
-
-                true ->
-                  item
-              end
-
-            true ->
-              item
-          end
+          item
       end
 
     item =
