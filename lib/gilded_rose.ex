@@ -33,10 +33,14 @@ defmodule GildedRose do
     :ok
   end
 
+  def update_quality(%Item{name: "Aged Brie"} = item) do
+    %{item | quality: min(item.quality + 1, 50), sell_in: item.sell_in - 1}
+  end
+
   def update_quality(item) do
     item =
       cond do
-        item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert" ->
+        item.name != "Backstage passes to a TAFKAL80ETC concert" ->
           if item.quality > 0 do
             if item.name != "Sulfuras, Hand of Ragnaros" do
               %{item | quality: item.quality - 1}
@@ -127,13 +131,7 @@ defmodule GildedRose do
               end
 
             true ->
-              cond do
-                item.quality < 50 ->
-                  %{item | quality: item.quality + 1}
-
-                true ->
-                  item
-              end
+              item
           end
 
         true ->
