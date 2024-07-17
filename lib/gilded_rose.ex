@@ -51,20 +51,14 @@ defmodule GildedRose do
 
   def update_quality(item) do
     item =
-      cond do
-        item.name != "Backstage passes to a TAFKAL80ETC concert" ->
-          if item.quality > 0 do
-            if item.name != "Sulfuras, Hand of Ragnaros" do
-              %{item | quality: item.quality - 1}
-            else
-              item
-            end
-          else
-            item
-          end
-
-        true ->
+      if item.quality > 0 do
+        if item.name != "Sulfuras, Hand of Ragnaros" do
+          %{item | quality: item.quality - 1}
+        else
           item
+        end
+      else
+        item
       end
 
     item =
@@ -80,25 +74,13 @@ defmodule GildedRose do
       cond do
         item.sell_in < 0 ->
           cond do
-            item.name != "Aged Brie" ->
+            item.quality > 0 ->
               cond do
-                item.name != "Backstage passes to a TAFKAL80ETC concert" ->
-                  cond do
-                    item.quality > 0 ->
-                      cond do
-                        item.name != "Sulfuras, Hand of Ragnaros" ->
-                          %{item | quality: item.quality - 1}
-
-                        true ->
-                          item
-                      end
-
-                    true ->
-                      item
-                  end
+                item.name != "Sulfuras, Hand of Ragnaros" ->
+                  %{item | quality: item.quality - 1}
 
                 true ->
-                  %{item | quality: item.quality - item.quality}
+                  item
               end
 
             true ->
