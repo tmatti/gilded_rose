@@ -158,7 +158,7 @@ defmodule GildedRoseTest do
     {:ok, conjured} =
       Agent.start_link(fn ->
         [
-          Item.new("Conjured", 10, 10)
+          Item.new("Conjured Mana Cake", 10, 10)
         ]
       end)
 
